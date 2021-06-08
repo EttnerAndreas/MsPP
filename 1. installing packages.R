@@ -54,7 +54,14 @@ library(geneplotter)
 library(biomaRt)
 # You might be struggling loading all packages, 
 
+install.packages("devtools")
+devtools::install_github("hadley/tibble")
 
+
+install.packages("cachem")
+
+if (!require("remotes")) install.packages("remotes")
+remotes::install_github("r-lib/cachem")
 
 #   3. start of the Pipeline
 #  ----------------------------------------------

@@ -209,29 +209,200 @@ for ( i in 1: nrow(TAIR_SpurB_only_Comp)){
     }
   }
 }
-input_raw_who=input_raw_who[input_raw_who$Potential.contaminant==''&input_raw_who$Reverse=='',]
 
-df1 = data.frame(TAIR_Comp)
+
+
+
+##### --------------- VENN DIAGRAM ---------------------
+devtools::install_github("yanlinlin82/ggvenn@v0.1.0")
+library(ggvenn)
+df1 = data.frame(TAIR_SpurB)
 df2 = data.frame(TAIR_SpurA)
+
 data1 = match_df(df1, df2, on = "Accession")
 
+nrow(df1)
+nrow(df2)
+nrow(data1)
+data1
 
-View(data1)
-list1 = list(data1,TAIR_Comp,TAIR_SpurA)
+str(data1)
+summary(data1)
+
+for ( i in 1: nrow(data1)){
+  for (j in 1: nrow(controll)){
+    if (data1$Accession[i] == controll$ATG[j]){
+      print(controll$Protein [j])
+      print(i)
+    }
+  }
+}
+
+######### setdiff(a$x, b$y)
+data_513 = subset(TAIR_SpurB, !(Accession %in% TAIR_SpurA$Accession))
+str(data_513)
+nrow(data_513)
+
+
+
+for ( i in 1: nrow(data_513)){
+  for (j in 1: nrow(controll)){
+    if (data_513$Accession[i] == controll$ATG[j]){
+      print(controll$Protein [j])
+      print(data_513$Scores[i])
+      print(controll$ATG[j])
+    }
+  }
+}
+####### ----------------------------------------------
+
+data_211 = subset(TAIR_SpurA, !(Accession %in% TAIR_SpurB$Accession))
+str(data_211)
+nrow(data_211)
+nrow(data1)
+
+
+for ( i in 1: nrow(data_211)){
+  for (j in 1: nrow(controll)){
+    if (data_211$Accession[i] == controll$ATG[j]){
+      print(controll$Protein [j])
+      print(data_513$Scores[i])
+      print(controll$ATG[j])
+    }
+  }
+}
+
+nrow(data1)
+for ( i in 1: nrow(data1)){
+  for (j in 1: nrow(controll)){
+    if (data1$Accession[i] == controll$ATG[j]){
+      print(controll$ATG[j])
+      print(controll$Protein [j])
+      print(i)
+    }
+  }
+}
+
+#######
+####
+###
+###
+#
 library(ggvenn)
+library(ggVennDiagram)
+library(VennDiagram)
+
+#'----- new function 
+display_venn <- function(x, ...){
+  library(VennDiagram)
+  grid.newpage()
+  venn_object <- venn.diagram(x, filename = NULL, ...)
+  grid.draw(venn_object)
+}
+
+
+list1 = list(
+  Tair_A = TAIR_SpurA$Accession, 
+  Tair_B = TAIR_SpurB$Accession)
+
+list2 = list(
+  Matches_A_B = data1$Accession,
+  Tair_A = TAIR_SpurA$Accession, 
+  Tair_B = TAIR_SpurB$Accession)
+
+
+ggVennDiagram(list1, label_alpha = 0)
+
+
+fig1 = display_venn(   
+  list1,
+  category.names = c( "non-crosslink", "crosslink"),
+  fill = c( "#F5793A", "#0F0280")
+)###### A = NO_CROSSLINK // B = CROSSLINK   
+## #F5793A   ##F5793A
+
+
+#      #FFD954  #69491A
+fig1 = display_venn(   
+  list1,
+  category.names = c( "non-crosslink", "crosslink"),
+  fill = c( "#F2AB39", "#282B42"),#F8981D    #E12E4B
+  lwd = 2,
+  #lty = 'blank',
+  # Numbers
+  cex = 1.3,
+  fontface = "italic",
+  # Set names
+  cat.cex = 1.3,
+  cat.default.pos = "text",
+  cat.fontface = "bold"
+  #cat.default.pos = "outer",
+)
+
+?display_venn
+View(controll)
+
+#### ---------------------------------------
+#'###
+list3 = list(
+  Matches_A_B = data2$Accession,
+  Tair_A = TAIR_SpurA$Accession, 
+  Tair_B = TAIR_SpurB$Accession)
+
+ggVennDiagram(list3, label_alpha = 0)
+
+
+fig2 = display_venn(
+  list3,
+  category.names = c("Matches_A_B"  , "Tair_A", "Tair_B"),
+  fill = c( "#E69F00", "#56B4E9", "#009E73")
+)
+####### ------------------------------------------
+######
+#####
 
 ggvenn(
   list1, 
-  fill_color = c("#0073C2FF", "#EFC000FF", "#868686FF"),
-  stroke_size = 0.5, set_name_size = 4
+  show_elements = FALSE,
+  show_percentage = TRUE,
+  digits = 1,
+  fill_color = c("#0073C2FF", "#EFC000FF", "#868686FF", "#CD534CFF"),
+  fill_alpha = 0.5,
+  stroke_size = 0.5, set_name_size = 4,
 )
+#####---##
+#####---##
+
+library(ggVennDiagram)
+library(VennDiagram)
+
+ggVennDiagram(list2, label_alpha = 0)
+
 
 display_venn(
-  list1,
+  list2,
+  category.names = c("Matches_A_B"  , "Tair_A", "Tair_B"),
+  fill = c( "#E69F00", "#56B4E9", "#009E73")
+)
+
+
+venn.diagram(list1, filename = "venn-4-dimensions.png")
+
+  
+# Helper function to display Venn diagram
+display_venn <- function(list1, ...){
+  library(VennDiagram)
+  grid.newpage()
+  venn_object <- venn.diagram(list1, filename = NULL, ...)
+  grid.draw(venn_object)
+}
+display_venn(x)
+
+display_venn(
+  x,
   category.names = c("Set 1" , "Set 2 " , "Set 3", "Set 4"),
   fill = c("#999999", "#E69F00", "#56B4E9", "#009E73")
 )
-
 
 
 #### aus Spur A alle aus B rauswerfen 
@@ -393,10 +564,10 @@ basedir = getBaseDir()
 resultdir = file.path( basedir, "result", "Normalization")
 dir.create(resultdir, recursive = TRUE,showWarnings=FALSE)
 
-load(file.path(basedir, "result", "peptideMapping", "ESetRaw.rda"))The  raw  data  in  the  ExpressionSet  is  converted  to  a  new  ExpressionSet  containing  log-ratios  of  peptide  intensities.At first, log-ratios for F1 cCL to F1 noCL background control are computed.key = paste(ESetRaw$Enzyme,ESetRaw$Experiment,sep="_")I = which(ESetRaw$Cond == "F1cCL")J = which(ESetRaw$Cond == "F1noCL")J = J[match(key[I],key[J])]I = I[!is.na(J)]J = J[!is.na(J)]EF1 = ESetRaw[,I]exprs(EF1) = log2(exprs(ESetRaw[,I])) - log2(exprs(ESetRaw[,J]))EF1$Cond = "lrF1"Next, the log-ratios for F3 cCL (second oligo-dT pull-down after proteolysis with enzyme, e.g.  LysC or ArgC) to F2cCL (supernatant of second pull-down) are computed.key = paste(ESetRaw$Enzyme,ESetRaw$Experiment,sep="_")I = which(ESetRaw$Cond == "F3cCL")
+load(file.path(basedir, "result", "peptideMapping", "ESetRaw.rda")) #The  raw  data  in  the  ExpressionSet  is  converted  to  a  new  ExpressionSet  containing  log-ratios  of  peptide  intensities.At first, log-ratios for F1 cCL to F1 noCL background control are computed.key = paste(ESetRaw$Enzyme,ESetRaw$Experiment,sep="_")I = which(ESetRaw$Cond == "F1cCL")J = which(ESetRaw$Cond == "F1noCL")J = J[match(key[I],key[J])]I = I[!is.na(J)]J = J[!is.na(J)]EF1 = ESetRaw[,I]exprs(EF1) = log2(exprs(ESetRaw[,I])) - log2(exprs(ESetRaw[,J]))EF1$Cond = "lrF1"Next, the log-ratios for F3 cCL (second oligo-dT pull-down after proteolysis with enzyme, e.g.  LysC or ArgC) to F2cCL (supernatant of second pull-down) are computed.key = paste(ESetRaw$Enzyme,ESetRaw$Experiment,sep="_")I = which(ESetRaw$Cond == "F3cCL")
 
 RBDmap:::hwriteNormalization(EF3F2, dirname=resultdir)
-The two expression sets are combined and saved.
+#The two expression sets are combined and saved.
 
 E = combine(EF1, EF3F2)
 E$Cond = factor(E$Cond)
