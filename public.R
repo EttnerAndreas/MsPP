@@ -349,7 +349,93 @@ for (i in 1:nrow(df_match2)){
 #########
 ######
 #####
-repeat.experiment_Score = data.frame(matrix(NA,400,6))
+# repeat.experiment_Score = data.frame(matrix(NA,400,6))
+# counter = 1
+# 
+# for ( i in 1 : nrow(df_match1)){
+#   for ( j in 1 : nrow(df_match2)){
+#     if ( df_match1$Accession[i] == df_match2$Accession[j]){
+#       if ( as.numeric(df_match1$Scores[i]) > as.numeric(df_match2$Scores[j])) {
+#         difference = (as.numeric(df_match1$Scores[i]) / as.numeric(df_match2$Scores[j]) )
+#         if ( difference >= 2){
+#           
+#           repeat.experiment_Score[counter, 1] <- "DF1_bigger" 
+#           repeat.experiment_Score[counter, 2] <- df_match1$Accession[i]
+#           repeat.experiment_Score[counter, 3] <- df_match2$Accession[j]
+#           repeat.experiment_Score[counter, 4] <- df_match1$Scores[i]
+#           repeat.experiment_Score[counter, 5] <- df_match2$Scores[j]
+#           repeat.experiment_Score[counter, 6] <- difference
+#           
+#           counter = counter + 1
+#       }}
+#       else # dataframe2 is bigger than dataframe1
+#         if ( difference >= 2){
+#           repeat.experiment_Score[counter, 1] <- "DF2_bigger" 
+#           repeat.experiment_Score[counter, 2] <- df_match1$Accession[j]
+#           repeat.experiment_Score[counter, 3] <- df_match2$Accession[i]
+#           repeat.experiment_Score[counter, 4] <- df_match1$Scores[j]
+#           repeat.experiment_Score[counter, 5] <- df_match2$Scores[i]
+#           repeat.experiment_Score[counter, 6] <- difference
+#           counter = counter + 1
+#     }}
+#   }
+# }
+
+
+
+repeat.experiment_Score = data.frame(matrix(NA,850,6))
+counter = 1
+
+# for ( i in 1 : nrow(df_match1)){
+#   for ( j in 1 : nrow(df_match2)){
+#     if ( df_match1$Accession[i] == df_match2$Accession[j]){
+#         difference = (as.numeric(df_match1$Scores[i]) / as.numeric(df_match2$Scores[j]) )
+#         
+#         repeat.experiment_Score[counter, 1] <- i 
+#         repeat.experiment_Score[counter, 2] <- df_match1$Accession[i]
+#         repeat.experiment_Score[counter, 3] <- df_match2$Accession[j]
+#         repeat.experiment_Score[counter, 4] <- df_match1$Scores[i]
+#         repeat.experiment_Score[counter, 5] <- df_match2$Scores[j]
+#         repeat.experiment_Score[counter, 6] <- difference
+#         
+#         counter = counter + 1
+#         }
+#   }
+# }
+
+
+Score_comparison = repeat.experiment_Score[complete.cases(repeat.experiment_Score), ]
+colnames(Score_comparison)  = c("Bigger","ATG_bigger", "ATG_smaller" , "Score_1" , "Score_2" , "difference")
+Score_comparison$Score_1 = as.numeric(Score_comparison$Score_1)
+Score_comparison$Score_2 = as.numeric(Score_comparison$Score_2)
+
+
+pairs(log(Score_comparison[5:6]) ,col = col)
+summary(Score_comparison)
+str(Score_comparison)
+Score_comparison
+
+for (s in nrow(Score_comparison)) {
+  col = ifelse(Score_comparison$difference <= 1.3, "gray", "orange")
+  col[which(Score_comparison$difference >= 2)] = "firebrick1"
+  col[which(Score_comparison$difference >= 5)] = "firebrick"
+  col[which(Score_comparison$difference <= 0.7)] = "turquoise1"
+  col[which(Score_comparison$difference <= 0.5 )] = "turquoise4"
+  col[which(Score_comparison$difference <= 0.4 )] = "blue"
+  
+  pairs(sqrt(Score_comparison[4:6]),col=col, pch=19,  main = "Olga Rudi crosslinked non-crosslinked", labels = c("crosslinked", "non-crosslinked", "difference"))
+}
+
+##############  ----------------------------------------------------------------
+#
+# ------------------------------------------------------------------------------
+#
+# ------------------------------------------------------------------------------
+
+
+repeat.experiment_Score1 = data.frame(matrix(NA,800,6))
+repeat.experiment_Score2 = data.frame(matrix(NA,800,6))
+
 counter = 1
 
 for ( i in 1 : nrow(df_match1)){
@@ -357,51 +443,127 @@ for ( i in 1 : nrow(df_match1)){
     if ( df_match1$Accession[i] == df_match2$Accession[j]){
       if ( as.numeric(df_match1$Scores[i]) > as.numeric(df_match2$Scores[j])) {
         difference = (as.numeric(df_match1$Scores[i]) / as.numeric(df_match2$Scores[j]) )
-        if ( difference >= 2){
-          
-          repeat.experiment_Score[counter, 1] <- "DF1_bigger" 
-          repeat.experiment_Score[counter, 2] <- df_match1$Accession[i]
-          repeat.experiment_Score[counter, 3] <- df_match2$Accession[j]
-          repeat.experiment_Score[counter, 4] <- df_match1$Scores[i]
-          repeat.experiment_Score[counter, 5] <- df_match2$Scores[j]
-          repeat.experiment_Score[counter, 6] <- difference
-          
-          counter = counter + 1
-      }}
+
+        repeat.experiment_Score1[counter, 1] <- i
+        repeat.experiment_Score1[counter, 2] <- df_match1$Accession[i]
+        repeat.experiment_Score1[counter, 3] <- df_match2$Accession[j]
+        repeat.experiment_Score1[counter, 4] <- df_match1$Scores[i]
+        repeat.experiment_Score1[counter, 5] <- df_match2$Scores[j]
+        repeat.experiment_Score1[counter, 6] <- difference
+
+                counter = counter + 1
+      }
       else # dataframe2 is bigger than dataframe1
-        if ( difference >= 2){
-          repeat.experiment_Score[counter, 1] <- "DF2_bigger" 
-          repeat.experiment_Score[counter, 2] <- df_match1$Accession[j]
-          repeat.experiment_Score[counter, 3] <- df_match2$Accession[i]
-          repeat.experiment_Score[counter, 4] <- df_match1$Scores[j]
-          repeat.experiment_Score[counter, 5] <- df_match2$Scores[i]
-          repeat.experiment_Score[counter, 6] <- difference
+        difference = (as.numeric(df_match1$Scores[i]) / as.numeric(df_match2$Scores[j]) )
+
+        repeat.experiment_Score2[counter, 1] <- i
+        repeat.experiment_Score2[counter, 2] <- df_match1$Accession[j]
+        repeat.experiment_Score2[counter, 3] <- df_match2$Accession[i]
+        repeat.experiment_Score2[counter, 4] <- df_match1$Scores[j]
+        repeat.experiment_Score2[counter, 5] <- df_match2$Scores[i]
+        repeat.experiment_Score2[counter, 6] <- difference
+
+        counter = counter + 1
+
+    }
+  }
+}
+
+
+dat1 = repeat.experiment_Score1[complete.cases(repeat.experiment_Score1), ]
+dat2 = repeat.experiment_Score2[complete.cases(repeat.experiment_Score2), ]
+colnames(dat1)  = c("Bigger","ATG_bigger", "ATG_smaller" , "Score_1" , "Score_2" , "difference")
+colnames(dat2)  = c("Bigger","ATG_bigger", "ATG_smaller" , "Score_1" , "Score_2" , "difference")
+
+dat1$Score_1 = as.numeric(dat1$Score_1)
+dat1$Score_2 = as.numeric(dat1$Score_2)
+dat2$Score_1 = as.numeric(dat2$Score_1)
+dat2$Score_2 = as.numeric(dat2$Score_2)
+
+
+dat1
+dat2
+
+data = dat1[4]
+head(data) 
+for (s in nrow(Score_comparison)) {
+  col = ifelse(Score_comparison$difference <= 1.3, "gray", "orange")
+  col[which(Score_comparison$difference >= 2)] = "firebrick1"
+  col[which(Score_comparison$difference >= 5)] = "firebrick"
+  col[which(Score_comparison$difference <= 0.7)] = "turquoise1"
+  col[which(Score_comparison$difference <= 0.5 )] = "turquoise4"
+  col[which(Score_comparison$difference <= 0.4 )] = "blue"
+  
+  pairs((Score_comparison[4:5]),col=col, pch=19,  main = "Olga Rudi crosslinked non-crosslinked", labels = c("crosslinked", "non-crosslinked", "difference"))
+}
+
+
+
+
+repeat.experiment_B = data.frame(matrix(NA,200,4))
+counter = 1
+
+for ( i in 1: nrow(Score_comparison)){
+  for (j in 1: nrow(reference)){
+    if ( Score_comparison$difference[j] >= 2){
+      if (str_detect( as.character( lapply(Score_comparison$ATG_bigger[i], tolower)) ,  as.character( lapply(reference$ATG[j], tolower)) ) == TRUE ){
+        print(Score_comparison$difference[j])
+        repeat.experiment_B[counter, 1] <- Score_comparison$ATG_bigger[i]
+        repeat.experiment_B[counter, 2] <- reference$ATG[j]
+        repeat.experiment_B[counter, 3] <- reference$PROTEIN [j]
+        repeat.experiment_B[counter, 4] <- reference$COMPLEX [j]
+
+        counter = counter + 1
     }}
   }
 }
 
-Score_comparison = repeat.experiment_Score[complete.cases(repeat.experiment_Score), ]
+CROSSLINK = repeat.experiment_B[complete.cases(repeat.experiment_B), ]
+CROSSLINK
 
-colnames(Score_comparison)  = c("Bigger","ATG_bigger", "ATG_smaller" , "Score_1" , "Score_2" , "difference")
-summary(Score_comparison)
-
-Score_comparison
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# date = "2021-06-09"
+# type = c("_150-NaCl", "_150-Manitol", "_controll" , "_300-Manitol" , "_heat", "_200-Manitol" )
+# genotype = c("_Col-0", "_Vir-1" , "_fip-37"   , "_4b-1" , "_4b-2", "_4b-4")
+# group = c("_1" , "_2" , "_3")
+# 
+# 
+# 
+# old_files <- list.files("C:/Users/andie/pictures/uni/04.06.2021", pattern = "*.JPG", full.names = TRUE)
+# old_files
+# 
+# new_files <- paste0("C:/Users/andie/pictures/uni/04.06.2021",".JPG")
+# new_files
+# 
+# list = list()
+# for (i in 1 : 1){  
+#   for (j in 1 : 4){   ### genotype 
+#     for (k in 1 : 6 ){
+#       for (m in 1: 3){
+#         
+#         list = c(list,paste0(date, type[j], genotype[k], group[m],".JPG", sep = "") )
+#         
+#       }
+#       
+#   }}
+# }
+# list
+# 
+# for (i in 1 : length(old_files)){  
+#   new_files[i] <- paste0("C:/Users/andie/pictures/uni/04.06.2021/",list[i],".JPG")
+#   
+# }
+# new_files
+# 
+# 
+# file.copy(from = old_files, to = new_files)
 ###
+#'
+#'
+#'
+#'
+#'
+#'
+#'
 #'
 #'
 #'
