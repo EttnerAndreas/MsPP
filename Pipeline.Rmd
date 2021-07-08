@@ -301,6 +301,71 @@ dev.off()
 ```{r rename colums of files} 
 
 
+repeat.experiment_Score = data.frame(matrix(NA,850,6))
+counter = 1
+
+for ( i in 1 : nrow(df_match1)){
+  for ( j in 1 : nrow(df_match2)){
+    if ( df_match1$Accession[i] == df_match2$Accession[j]){
+        difference = (as.numeric(df_match1$Scores[i]) / as.numeric(df_match2$Scores[j]) )
+
+        repeat.experiment_Score[counter, 1] <- i
+        repeat.experiment_Score[counter, 2] <- df_match1$Accession[i]
+        repeat.experiment_Score[counter, 3] <- df_match2$Accession[j]
+        repeat.experiment_Score[counter, 4] <- df_match1$Scores[i]
+        repeat.experiment_Score[counter, 5] <- df_match2$Scores[j]
+        repeat.experiment_Score[counter, 6] <- difference
+
+        counter = counter + 1
+        }
+  }
+}
+
+
+Score_comparison = repeat.experiment_Score[complete.cases(repeat.experiment_Score), ]
+colnames(Score_comparison)  = c("Bigger","ATG_bigger", "ATG_smaller" , "Score_1" , "Score_2" , "difference")
+Score_comparison$Score_1 = as.numeric(Score_comparison$Score_1)
+Score_comparison$Score_2 = as.numeric(Score_comparison$Score_2)
+
+
+# pairs(log(Score_comparison[5:6]) ,col = col)
+# summary(Score_comparison)
+# str(Score_comparison)
+# Score_comparison
+
+
+
+
+dat1 = repeat.experiment_Score1[complete.cases(repeat.experiment_Score1), ]
+dat2 = repeat.experiment_Score2[complete.cases(repeat.experiment_Score2), ]
+colnames(dat1)  = c("Bigger","ATG_bigger", "ATG_smaller" , "Score_1" , "Score_2" , "difference")
+colnames(dat2)  = c("Bigger","ATG_bigger", "ATG_smaller" , "Score_1" , "Score_2" , "difference")
+
+dat1$Score_1 = as.numeric(dat1$Score_1)
+dat1$Score_2 = as.numeric(dat1$Score_2)
+dat2$Score_1 = as.numeric(dat2$Score_1)
+dat2$Score_2 = as.numeric(dat2$Score_2)
+
+
+dat1
+dat2
+
+data = dat1[4]
+head(data) 
+for (s in nrow(Score_comparison)) {
+  col = ifelse(Score_comparison$difference <= 1.3, "gray", "orange")
+  col[which(Score_comparison$difference >= 2)] = "firebrick1"
+  col[which(Score_comparison$difference >= 5)] = "firebrick"
+  col[which(Score_comparison$difference <= 0.7)] = "turquoise1"
+  col[which(Score_comparison$difference <= 0.5 )] = "turquoise4"
+  col[which(Score_comparison$difference <= 0.4 )] = "blue"
+  
+  pairs((Score_comparison[4:5]),col=col, pch=19,  main = "Olga Rudi crosslinked non-crosslinked", labels = c("crosslinked", "non-crosslinked", "difference"))
+}
+
+
+
+
 ```
 
 
