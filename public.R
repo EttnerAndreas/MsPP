@@ -386,22 +386,22 @@ for (i in 1:nrow(df_match2)){
 repeat.experiment_Score = data.frame(matrix(NA,850,6))
 counter = 1
 
-# for ( i in 1 : nrow(df_match1)){
-#   for ( j in 1 : nrow(df_match2)){
-#     if ( df_match1$Accession[i] == df_match2$Accession[j]){
-#         difference = (as.numeric(df_match1$Scores[i]) / as.numeric(df_match2$Scores[j]) )
-#         
-#         repeat.experiment_Score[counter, 1] <- i 
-#         repeat.experiment_Score[counter, 2] <- df_match1$Accession[i]
-#         repeat.experiment_Score[counter, 3] <- df_match2$Accession[j]
-#         repeat.experiment_Score[counter, 4] <- df_match1$Scores[i]
-#         repeat.experiment_Score[counter, 5] <- df_match2$Scores[j]
-#         repeat.experiment_Score[counter, 6] <- difference
-#         
-#         counter = counter + 1
-#         }
-#   }
-# }
+for ( i in 1 : nrow(df_match1)){
+  for ( j in 1 : nrow(df_match2)){
+    if ( df_match1$Accession[i] == df_match2$Accession[j]){
+        difference = (as.numeric(df_match1$Scores[i]) / as.numeric(df_match2$Scores[j]) )
+
+        repeat.experiment_Score[counter, 1] <- i
+        repeat.experiment_Score[counter, 2] <- df_match1$Accession[i]
+        repeat.experiment_Score[counter, 3] <- df_match2$Accession[j]
+        repeat.experiment_Score[counter, 4] <- df_match1$Scores[i]
+        repeat.experiment_Score[counter, 5] <- df_match2$Scores[j]
+        repeat.experiment_Score[counter, 6] <- difference
+
+        counter = counter + 1
+        }
+  }
+}
 
 
 Score_comparison = repeat.experiment_Score[complete.cases(repeat.experiment_Score), ]
