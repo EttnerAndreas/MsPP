@@ -302,8 +302,8 @@ display_venn <- function(x, ...){
 
 
 list1 = list(
-  Tair_A = TAIR_SpurA$Accession, 
-  Tair_B = TAIR_SpurB$Accession)
+  Tair_A = Olga_Rudi_Compi_TAIR_SpurA$Accession, 
+  Tair_B = Olga_Rudi_Compi_TAIR_SpurB$Accession)
 
 list2 = list(
   Matches_A_B = data1$Accession,

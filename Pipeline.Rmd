@@ -38,7 +38,7 @@ Olga_Rudi_Compi_TAIR_SpurB <- read_excel("Data/Olga Rudi_Compi_TAIR_SpurB.xlsx")
 # load reference dataset
 # created by Klaus Grasser working group, including relevant protiens and their corresponding ATG number.
 # can be replaced by other protein-list of interst (POI)
-controll <- read_excel("C:/Users/andie/Dropbox/Mein PC (DESKTOP-4TB10SM)/Downloads/Pipeline/TREX componenten.xlsx", col_names = FALSE)
+controll <- read_excel("Data/TREX componenten.xlsx", col_names = FALSE)
 
 colnames(controll) <- c("Protein", "ATG", "complex")
 str(controll)
@@ -55,7 +55,7 @@ str(controll)
 # colnames(controll) <- c("Protein", "ATG", "complex")
 # str(controll)
 
-reference <- read_excel("C:/Users/andie/Dropbox/Mein PC (DESKTOP-4TB10SM)/Downloads/Kopie von POI.xlsx", 
+reference <- read_excel("Data/protein_of_interest.xlsx", 
                         skip = 1)
 
 reference = reference[, c(1:3)] ## select the first three columns of the excel file, 
@@ -130,6 +130,7 @@ furthermore the protein name as well as the complex will be listed there as well
 ```{r comparison of MS-Pulldown data vs the reference genome} 
 library(RecordLinkage)
 library(stringr)
+
 repeat.experiment_A = data.frame(matrix(NA,200,4))
 counter = 1
 
