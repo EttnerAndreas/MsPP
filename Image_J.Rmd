@@ -7,12 +7,16 @@ output: html_document
 
 ```{r load Dataset}
 library(readr)
+library(readxl)
 
 df1 <- read_csv("ImageJ/ImageJ-output/analysi_04.csv")
 df2 <- read_csv("ImageJ/ImageJ-output/analysi_07.csv")
 df3 <- read_csv("ImageJ/ImageJ-output/analysi_09.csv")
 df4 <- read_csv("ImageJ/ImageJ-output/analysi_11-14.csv")
 df5 <- read_csv("ImageJ/ImageJ-output/analysi_16-18.csv")
+
+
+sort.dataset <- read_excel("ImageJ/ImageJ-output/ImageJ_output.xlsx")
 ```
 
 ## R Markdown
@@ -28,12 +32,20 @@ nrow(dataset)
 
 sort.dataset  <- with(dataset,  dataset[order(Slice) , ]) # order the dataframe
 
+```
+
+
+
+```{r remove  outlier}
+library(stringr)
+
 timeseries = c("2021-06-04", "2021-06-07", "2021-06-09", "2021-06-11", "2021-06-14", "2021-06-16", "2021-06-18" )
 experiment = c( "150-Mannitol", "150-NaCl" , "200-Mannitol", "300-Mannitol", "controll", "heat")
 genotype = c("Col-0", "vir-1", "fip-37", "4b-1", "4b-2", "4b-4")
-repeat.timeseries = data.frame(matrix(NA,108,8))
-repeat.timeseries
 
+
+
+repeat.timeseries = data.frame(matrix(NA,108,8))
 
 counter = 1 
 for ( i in 1:nrow(sort.dataset) ){                                                    ## every element of the 758 elements
@@ -55,26 +67,136 @@ for ( i in 1:nrow(sort.dataset) ){                                              
 data = repeat.timeseries
 colnames(data) = c("name", "Day_7", "Day_11", "Day_13", "Day_15", "Day_18", "Day_20", "Day_22")
 data[,1] = as.factor(data[,1])
+
+# remove  outlier
+data[70,3] = mean( data[71:72,3] )
 ```
 
-```{r plot}
-library(ggplot2)
-
-time =
-
-p <- ggplot(data = data) + 
-     geom_line(color = "#00AFBB", size = 1)
-p
-
+```{r remove  outlier}
 
 
 ```
 
-```{r cars}
+```{r line plot}
+# Libraries
+library(hrbrthemes)
+library(GGally)
+library(viridis)
+
+par(mfrow=c(2,2))
+
+
+###---- Hex colour code
+
+#1f2329
+#6d37da
+#a250e5
+#e1dde7
+#f46e11
+#8d8393 
+
+## ------
+clr_palett = c("#1f2329", "#1f2329", "#1f2329", "#1f2329", "#1f2329", "#1f2329",
+               "#6d37da", "#6d37da", "#6d37da", "#6d37da", "#6d37da", "#6d37da",
+               "#a250e5", "#a250e5", "#a250e5", "#a250e5", "#a250e5", "#a250e5",
+               "#b2d110", "#b2d110", "#b2d110", "#b2d110", "#b2d110", "#b2d110",
+               "#f46e11", "#f46e11", "#f46e11", "#f46e11", "#f46e11", "#f46e11",
+               "#8d8393", "#8d8393", "#8d8393", "#8d8393", "#8d8393", "#8d8393")
+
+
+clr = c("#1f2329","#6d37da","#a250e5","#b2d110","#f46e11","#8d8393" )
 
 ```
 
-```{r cars}
+```{r Mannitol}
+####  150 Mannitol 
+ggparcoord(data[1:18,],
+           columns = 2:8, groupColumn = 1,
+           scale="globalminmax",
+           showPoints = TRUE, 
+           title = "150 Mannitol",
+           alphaLines = 0.5
+) + 
+  scale_color_manual(values= c("#1f2329","#6d37da","#a250e5","#b2d110","#f46e11","#8d8393" )) +
+  theme_ipsum()+
+  theme(
+    plot.title = element_text(size=13)
+  ) +
+  xlab("")
+
+
+#------------------------------------------------------------------------------------------------------------------
+#--
+#--
+####  200 Mannitol 
+ggparcoord(data[37:54,],
+           columns = 2:8, groupColumn = 1,
+           scale="globalminmax",
+           showPoints = TRUE, 
+           title = "200 Mannitol",
+           alphaLines = 0.5
+) + 
+  scale_color_manual(values= c("#1f2329","#6d37da","#a250e5","#b2d110","#f46e11","#8d8393" )) +
+  theme_ipsum()+
+  theme(
+    plot.title = element_text(size=13)
+  ) +
+  xlab("")
+
+
+#------------------------------------------------------------------------------------------------------------------
+
+#--
+#--
+####  200 Mannitol 
+ggparcoord(data[55:72,],
+           columns = 2:8, groupColumn = 1,
+           scale="globalminmax",
+           showPoints = TRUE, 
+           title = "300 Mannitol",
+           alphaLines = 0.5
+) + 
+  scale_color_manual(values= clr) +
+  theme_ipsum()+
+  theme(
+    plot.title = element_text(size=13)
+  ) +
+  xlab("")
+
+
+
+ggparcoord(data[73:90,],
+           columns = 2:8, groupColumn = 1,
+           scale="globalminmax",
+           showPoints = TRUE, 
+           title = "1/2 MS",
+           alphaLines = 0.5
+) + 
+  scale_color_manual(values= clr) +
+  theme_ipsum()+
+  theme(
+    plot.title = element_text(size=13)
+  ) + ylab("size in cm")+
+  xlab("Days after stratification")
+
+
+
+
+
+
+ggparcoord(data[91:108,],
+           columns = 2:8, groupColumn = 1,
+           scale="globalminmax",
+           showPoints = TRUE, 
+           title = "heat-shock",
+           alphaLines = 0.5
+) + 
+  scale_color_manual(values= clr) +
+  theme_ipsum()+
+  theme(
+    plot.title = element_text(size=13)
+  ) + ylab("size in cm")+
+  xlab("Days after stratification")
 
 ```
 

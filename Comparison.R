@@ -271,10 +271,10 @@ write.xlsx2(POI_they, file = sub_path_they_path, sheetName = "Sheet1",
 ##   ----------------------------------------------------------------------------------------
 
 list_final = list(
-  POI_me$Accession, 
-  POI_they$Accession,
-  sub_ME$Accession,
-  sub_they$Accession)
+  POI_they, 
+  b_only,
+  POI_me,
+  subset_B)
 
 
 display_venn(
