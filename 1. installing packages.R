@@ -9,7 +9,6 @@
 #          Platform: x86_64-w64-mingw32/x64 (64-bit)
 #          Running under: Windows 10 x64 (build 19042)
 
-
 #  ----------------------------------------------
 # 1. install recoomended packages
 # to uncomment block, highlight it and press " STRG + Umschalt + C "
